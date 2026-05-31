@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>华夏旅行社｜大同二日游</title>
+  <style>
+    :root {
+      --ink: #1e2523;
+      --muted: #61706c;
+      --paper: #fffaf2;
+      --line: #e7dccd;
+      --terra: #b75735;
+      --terra-dark: #813c2d;
+      --jade: #206d65;
+      --gold: #d99b35;
+      --mist: #f3eee5;
+      --white: #fff;
+      --shadow: 0 18px 52px rgba(48, 39, 29, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.6;
+    }
+    body.modal-open { overflow: hidden; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .page { overflow: hidden; padding-bottom: 0; }
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px clamp(20px, 5vw, 72px);
+      color: var(--white);
+      background: linear-gradient(to bottom, rgba(24, 30, 28, 0.76), rgba(24, 30, 28, 0));
+      transition: background 0.25s ease, box-shadow 0.25s ease, padding 0.25s ease;
+    }
+    .nav.is-solid {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      background: rgba(31, 39, 36, 0.92);
+      box-shadow: 0 12px 36px rgba(17, 24, 23, 0.2);
+      backdrop-filter: blur(14px);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.16);
+      font-size: 20px;
+    }
+    .nav-links { display: flex; gap: 26px; font-size: 15px; color: rgba(255, 255, 255, 0.9); }
+    .nav-links a { position: relative; }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -7px;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.2s ease;
+    }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    .hero {
+      min-height: 94vh;
+      position: relative;
+      color: var(--white);
+      display: grid;
+      align-items: end;
+      padding: 122px clamp(20px, 5vw, 72px) 54px;
+      background: #24302f;
+    }
+    .hero-slider, .hero-slide, .hero-slide::after {
+      position: absolute;
+      inset: 0;
+    }
+    .hero-slide {
+      opacity: 0;
+      transform: scale(1.04);
+      transition: opacity 0.8s ease, transform 6s ease;
+    }
+    .hero-slide.is-active { opacity: 1; transform: scale(1); }
+    .hero-slide::after {
+      content: "";
+      background:
+        linear-gradient(90deg, rgba(15, 22, 20, 0.88) 0%, rgba(15, 22, 20, 0.58) 44%, rgba(15, 22, 20, 0.16) 100%),
+        linear-gradient(0deg, rgba(15, 22, 20, 0.8) 0%, rgba(15, 22, 20, 0.04) 54%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+      gap: clamp(28px, 5vw, 68px);
+      align-items: end;
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.44);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      margin: 18px 0;
+      max-width: 760px;
+      font-size: clamp(44px, 7vw, 86px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .hero-copy {
+      max-width: 660px;
+      margin: 0 0 28px;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: clamp(17px, 2vw, 21px);
+    }
+    .hero-actions, .slider-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+    .slider-controls { margin-top: 30px; }
+    .dot {
+      width: 44px;
+      height: 4px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.35);
+      padding: 0;
+    }
+    .dot.is-active { background: var(--gold); }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border: 0;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary { background: var(--gold); color: #2f2415; box-shadow: 0 12px 32px rgba(217, 155, 53, 0.32); }
+    .button-ghost { border: 1px solid rgba(255, 255, 255, 0.45); color: var(--white); background: rgba(255, 255, 255, 0.1); }
+    .button-dark { background: var(--jade); color: var(--white); }
+
+    .price-panel {
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+    .panel-label { margin: 0 0 10px; color: rgba(255, 255, 255, 0.78); font-size: 14px; }
+    .price-main { display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px; }
+    .price-main strong { font-size: 48px; line-height: 1; }
+    .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
+    .price-item {
+      padding: 12px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      text-align: center;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .price-item:hover, .price-item.is-active { background: rgba(217, 155, 53, 0.28); transform: translateY(-2px); }
+    .price-item span { display: block; color: rgba(255, 255, 255, 0.74); font-size: 12px; }
+    .price-item b { font-size: 20px; }
+
+    .quick-facts {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: min(1180px, calc(100% - 40px));
+      margin: -38px auto 0;
+      position: relative;
+      z-index: 4;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+    }
+    .fact { padding: 22px 24px; border-right: 1px solid var(--line); }
+    .fact:last-child { border-right: 0; }
+    .fact span { display: block; color: var(--muted); font-size: 13px; }
+    .fact strong { display: block; margin-top: 6px; font-size: 18px; }
+
+    section { padding: 76px clamp(20px, 5vw, 72px); }
+    .section-inner { width: min(1180px, 100%); margin: 0 auto; }
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 30px;
+    }
+    .section-heading h2 { margin: 0; font-size: clamp(30px, 4vw, 46px); line-height: 1.15; }
+    .section-heading p { max-width: 470px; margin: 0; color: var(--muted); }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+    .highlights { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; }
+    .feature, .spot {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #d8d0c4;
+      box-shadow: 0 12px 30px rgba(55, 44, 32, 0.1);
+    }
+    .feature { min-height: 520px; }
+    .spot { min-height: 250px; }
+    .feature img, .spot img { transition: transform 0.65s ease; }
+    .feature:hover img, .spot:hover img { transform: scale(1.05); }
+    .feature::after, .spot::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(22, 27, 26, 0.78), rgba(22, 27, 26, 0.04) 62%);
+    }
+    .feature-text, .spot-text { position: absolute; left: 24px; right: 24px; bottom: 22px; z-index: 1; color: var(--white); }
+    .feature-text h3, .spot-text h3 { margin: 0 0 8px; font-size: 28px; }
+    .feature-text p, .spot-text p { margin: 0; color: rgba(255, 255, 255, 0.84); }
+    .spots { display: grid; gap: 20px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .tag { padding: 6px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.18); font-size: 13px; }
+
+    .itinerary-band { background: var(--mist); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .day-tabs { display: inline-flex; gap: 8px; padding: 6px; margin-bottom: 20px; border: 1px solid var(--line); border-radius: 999px; background: var(--white); }
+    .day-tab {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 18px;
+      color: var(--muted);
+      background: transparent;
+      font-weight: 700;
+    }
+    .day-tab.is-active { color: var(--white); background: var(--jade); }
+    .timeline { display: grid; gap: 18px; }
+    .day {
+      display: none;
+      grid-template-columns: 160px minmax(0, 1fr);
+      gap: 24px;
+      padding: 24px;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 30px rgba(55, 44, 32, 0.08);
+    }
+    .day.is-active { display: grid; }
+    .day-title { padding-right: 22px; border-right: 1px solid var(--line); }
+    .day-title span { color: var(--terra); font-weight: 800; font-size: 14px; }
+    .day-title h3 { margin: 8px 0 0; font-size: 28px; line-height: 1.18; }
+    .schedule { display: grid; gap: 12px; }
+    .schedule-row {
+      display: grid;
+      grid-template-columns: 104px minmax(0, 1fr) 34px;
+      gap: 18px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: #fffdf8;
+    }
+    .schedule-row:hover { border-color: var(--line); }
+    .time { color: var(--jade); font-weight: 800; }
+    .schedule-row p { margin: 0; color: var(--muted); }
+    .schedule-row strong { color: var(--ink); }
+    .more {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--mist);
+      color: var(--terra-dark);
+      font-weight: 800;
+    }
+    .details {
+      grid-column: 2 / 4;
+      max-height: 0;
+      overflow: hidden;
+      color: var(--muted);
+      transition: max-height 0.25s ease;
+    }
+    .schedule-row.is-open .details { max-height: 120px; }
+    .schedule-row.is-open .more { background: var(--gold); color: #2f2415; }
+
+    .pricing { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .fare-card, .notice {
+      padding: 28px;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 30px rgba(55, 44, 32, 0.08);
+    }
+    .fare-card h3, .notice h3 { margin: 0 0 18px; font-size: 24px; }
+    .fare-list { display: grid; gap: 12px; }
+    .fare {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .fare.is-selected { border-color: var(--gold); transform: translateX(4px); }
+    .fare span { color: var(--muted); }
+    .fare strong { color: var(--terra-dark); font-size: 26px; }
+    .notice ul { margin: 0; padding-left: 18px; color: var(--muted); }
+    .notice li + li { margin-top: 10px; }
+
+    .cta { color: var(--white); background: linear-gradient(135deg, var(--jade), #263f44 54%, var(--terra-dark)); }
+    .cta-box { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: center; }
+    .cta h2 { margin: 0 0 10px; font-size: clamp(30px, 4vw, 46px); line-height: 1.15; }
+    .cta p { margin: 0; color: rgba(255, 255, 255, 0.82); }
+
+    .floating-card {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 18;
+      width: 278px;
+      padding: 18px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+      transform: translateY(120%);
+      transition: transform 0.32s ease;
+    }
+    .floating-card.is-visible { transform: translateY(0); }
+    .floating-card strong { display: block; font-size: 18px; }
+    .floating-card span { display: block; margin: 4px 0 14px; color: var(--muted); font-size: 13px; }
+    .floating-card .button { width: 100%; }
+
+    .mobile-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 19;
+      display: none;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -12px 32px rgba(55, 44, 32, 0.12);
+    }
+    .mobile-price strong { color: var(--terra-dark); font-size: 20px; }
+    .mobile-price span { display: block; color: var(--muted); font-size: 12px; }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(16, 22, 21, 0.62);
+    }
+    .modal.is-open { display: grid; }
+    .modal-card {
+      width: min(520px, 100%);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+      padding: 24px 24px 18px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--jade), var(--terra-dark));
+    }
+    .modal-head h3 { margin: 0 0 4px; font-size: 26px; }
+    .modal-head p { margin: 0; color: rgba(255, 255, 255, 0.82); }
+    .close {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.12);
+      font-size: 22px;
+      line-height: 1;
+    }
+    .form { display: grid; gap: 14px; padding: 24px; }
+    .field { display: grid; gap: 6px; }
+    .field label { color: var(--muted); font-size: 13px; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 13px;
+      color: var(--ink);
+      background: #fffdf8;
+    }
+    .field textarea { min-height: 86px; resize: vertical; }
+    .form-note { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .footer {
+      padding: 26px clamp(20px, 5vw, 72px);
+      color: #74685d;
+      background: #f7f0e6;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+    .footer-inner { width: min(1180px, 100%); margin: 0 auto; display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+
+    @media (max-width: 860px) {
+      .nav-links { display: none; }
+      .hero { min-height: auto; padding-top: 112px; }
+      .hero-content, .highlights, .pricing, .cta-box { grid-template-columns: 1fr; }
+      .price-panel { max-width: 460px; }
+      .quick-facts { grid-template-columns: repeat(2, 1fr); }
+      .fact { border-right: 0; border-bottom: 1px solid var(--line); }
+      .fact:nth-child(odd) { border-right: 1px solid var(--line); }
+      .fact:nth-last-child(-n + 2) { border-bottom: 0; }
+      .section-heading { display: block; }
+      .section-heading p { margin-top: 12px; }
+      .feature { min-height: 390px; }
+      .day { grid-template-columns: 1fr; }
+      .day-title { border-right: 0; border-bottom: 1px solid var(--line); padding: 0 0 18px; }
+      .floating-card { display: none; }
+      .mobile-bar { display: flex; }
+      .page { padding-bottom: 72px; }
+    }
+
+    @media (max-width: 560px) {
+      .nav { padding: 14px 18px; }
+      .hero { padding-left: 18px; padding-right: 18px; }
+      .price-grid, .quick-facts { grid-template-columns: 1fr; }
+      .fact, .fact:nth-child(odd) { border-right: 0; }
+      .fact:nth-last-child(2) { border-bottom: 1px solid var(--line); }
+      section { padding: 58px 18px; }
+      .schedule-row { grid-template-columns: 78px minmax(0, 1fr) 30px; gap: 10px; padding: 12px; }
+      .details { grid-column: 1 / 4; }
+      .button { width: 100%; }
+      .day-tabs { width: 100%; display: grid; grid-template-columns: 1fr 1fr; border-radius: 8px; }
+      .day-tab { border-radius: 6px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="nav" data-nav>
+      <a class="brand" href="#top" aria-label="华夏旅行社首页">
+        <span class="brand-mark">华</span>
+        <span>华夏旅行社</span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="#highlights">行程亮点</a>
+        <a href="#itinerary">每日安排</a>
+        <a href="#price">产品价格</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-slider" aria-hidden="true">
+          <div class="hero-slide is-active"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Datong_Ancient_City_Wall_04.jpg" alt=""></div>
+          <div class="hero-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Yungang_Grottoes_Cave_20_1.jpg/1280px-Yungang_Grottoes_Cave_20_1.jpg" alt=""></div>
+          <div class="hero-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Hanging_Monastery_entrance.jpg/1280px-Hanging_Monastery_entrance.jpg" alt=""></div>
+        </div>
+        <div class="hero-content">
+          <div class="reveal">
+            <span class="eyebrow">北京赵公口出发｜2天1晚｜文化古建线路</span>
+            <h1>大同二日游</h1>
+            <p class="hero-copy">一次走进云冈石窟、悬空寺与大同古城，把北魏佛影、悬崖古寺和古城夜色安排在一个轻松周末里。</p>
+            <div class="hero-actions">
+              <button class="button button-primary" data-open-modal>立即咨询</button>
+              <a class="button button-ghost" href="#itinerary">浏览行程</a>
+            </div>
+            <div class="slider-controls" aria-label="首屏图片切换">
+              <button class="dot is-active" data-slide="0" aria-label="大同古城"></button>
+              <button class="dot" data-slide="1" aria-label="云冈石窟"></button>
+              <button class="dot" data-slide="2" aria-label="悬空寺"></button>
+            </div>
+          </div>
+          <aside class="price-panel reveal" aria-label="产品价格">
+            <p class="panel-label">成人起价</p>
+            <div class="price-main"><strong>¥699</strong><span>/人</span></div>
+            <p class="panel-label">含团队用餐、三钻酒店住宿与两日行程安排，适合家庭、学生与周末短途出游。</p>
+            <div class="price-grid">
+              <div class="price-item is-active" data-price="699"><span>成人</span><b>¥699</b></div>
+              <div class="price-item" data-price="650"><span>学生</span><b>¥650</b></div>
+              <div class="price-item" data-price="588"><span>老人儿童</span><b>¥588</b></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <div class="quick-facts reveal" aria-label="行程概要">
+        <div class="fact"><span>出发时间</span><strong>第1天 07:00</strong></div>
+        <div class="fact"><span>集合地点</span><strong>北京赵公口</strong></div>
+        <div class="fact"><span>酒店标准</span><strong>携程三钻酒店</strong></div>
+        <div class="fact"><span>返程安排</span><strong>第2天 13:00</strong></div>
+      </div>
+
+      <section id="highlights">
+        <div class="section-inner">
+          <div class="section-heading reveal">
+            <h2>一眼看懂这趟大同</h2>
+            <p>路线围绕大同经典文化地标展开，白天看石窟与悬空古寺，晚上把时间留给古城自由漫步和当地小吃。</p>
+          </div>
+          <div class="highlights">
+            <article class="feature reveal">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Yungang_Grottoes_Cave_20_1.jpg/1280px-Yungang_Grottoes_Cave_20_1.jpg" alt="云冈石窟第20窟佛像">
+              <div class="feature-text">
+                <h3>云冈石窟</h3>
+                <p>中国石刻艺术代表之一，主要洞窟45个，造像数量众多，适合作为大同行程的第一站。</p>
+                <div class="tag-row"><span class="tag">世界级石窟</span><span class="tag">北魏佛影</span><span class="tag">门票120元/人</span></div>
+              </div>
+            </article>
+            <div class="spots">
+              <article class="spot reveal">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Hanging_Monastery_entrance.jpg/1280px-Hanging_Monastery_entrance.jpg" alt="悬空寺外观">
+                <div class="spot-text">
+                  <h3>悬空寺</h3>
+                  <p>建在恒山金龙峡崖壁上的儒释道三教合一寺庙建筑群。</p>
+                </div>
+              </article>
+              <article class="spot reveal">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Datong_Ancient_City_Wall_04.jpg/1280px-Datong_Ancient_City_Wall_04.jpg" alt="大同古城墙">
+                <div class="spot-text">
+                  <h3>大同古城</h3>
+                  <p>晚间自由活动，适合登城、拍照、逛街和品尝大同风味。</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="itinerary-band" id="itinerary">
+        <div class="section-inner">
+          <div class="section-heading reveal">
+            <h2>两天安排</h2>
+            <p>把长途车程、用餐、游览和自由活动按时间展开，客人可以切换日期，也可以展开查看补充说明。</p>
+          </div>
+          <div class="day-tabs reveal" aria-label="切换行程日期">
+            <button class="day-tab is-active" data-day="1">第1天</button>
+            <button class="day-tab" data-day="2">第2天</button>
+          </div>
+          <div class="timeline reveal">
+            <article class="day is-active" data-day-panel="1">
+              <div class="day-title"><span>第1天</span><h3>北京出发<br>云冈石窟</h3></div>
+              <div class="schedule">
+                <div class="schedule-row">
+                  <div class="time">07:00</div><p><strong>北京赵公口出发</strong>，乘车前往山西大同。</p><button class="more" aria-label="展开">+</button>
+                  <div class="details">建议提前15分钟到达集合地点，方便核对名单与装运行李。</div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">12:00</div><p><strong>团餐午餐</strong>，预计12:00至13:30，用餐标准60元/人。</p><button class="more" aria-label="展开">+</button>
+                  <div class="details">午餐以大同特色风味为主，具体菜单以当天餐厅安排为准。</div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">14:00</div><p><strong>游览云冈石窟</strong>，门票120元/人，参观武州山南麓的石窟艺术遗存。</p><button class="more" aria-label="展开">+</button>
+                  <div class="details">石窟区域建议穿舒适鞋，拍照时请遵守景区文物保护规定。</div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">晚上</div><p><strong>大同古城自由活动</strong>，游览古城街区与城墙夜景，入住携程三钻酒店。</p><button class="more" aria-label="展开">+</button>
+                  <div class="details">自由活动期间可自行品尝刀削面、烧麦、浑源凉粉等当地风味。</div>
+                </div>
+              </div>
+            </article>
+
+            <article class="day" data-day-panel="2">
+              <div class="day-title"><span>第2天</span><h3>悬空寺<br>返程北京</h3></div>
+              <div class="schedule">
+                <div class="schedule-row">
+                  <div class="time">07:00</div><p><strong>酒店早餐</strong>，早餐时间预计07:00至08:00。</p><button class="more" aria-label="展开">+</button>
+                  <div class="details">早餐后请整理好随身物品，按领队通知时间集合。</div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">08:00</div><p><strong>出发游览悬空寺</strong>，门票15元/人，登临票100元/人，必消小交通20元/人。</p><button class="more" aria-label="展开">+</button>
+                  <div class="details">登临名额和开放情况以景区当天公告为准，恐高游客可选择外观游览。</div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">11:30</div><p><strong>午餐</strong>，浑源凉粉或大同刀削面，参考标准15元/人。</p><button class="more" aria-label="展开">+</button>
+                  <div class="details">午餐为当地简餐安排，节奏轻快，便于下午准时返程。</div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">13:00</div><p><strong>返程北京赵公口</strong>，结束大同二日文化古建之旅。</p><button class="more" aria-label="展开">+</button>
+                  <div class="details">返程到达时间会受路况影响，请预留晚间后续安排时间。</div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="price">
+        <div class="section-inner">
+          <div class="section-heading reveal">
+            <h2>产品价格与费用提示</h2>
+            <p>价格信息突出展示，门票与餐标单独说明，方便报名咨询时快速核对。</p>
+          </div>
+          <div class="pricing">
+            <article class="fare-card reveal">
+              <h3>报名价格</h3>
+              <div class="fare-list">
+                <div class="fare is-selected" data-fare="成人"><span>成人价</span><strong>¥699/人</strong></div>
+                <div class="fare" data-fare="学生"><span>学生价</span><strong>¥650/人</strong></div>
+                <div class="fare" data-fare="老人儿童"><span>老人儿童</span><strong>¥588/人</strong></div>
+              </div>
+            </article>
+            <article class="notice reveal">
+              <h3>行程内参考费用</h3>
+              <ul>
+                <li>云冈石窟门票：120元/人。</li>
+                <li>悬空寺门票：15元/人；登临票：100元/人；必消小交通：20元/人。</li>
+                <li>第1天团餐餐标：60元/人；第2天午餐参考：15元/人。</li>
+                <li>住宿标准：携程三钻酒店，具体酒店以实际确认安排为准。</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="section-inner cta-box reveal">
+          <div>
+            <h2>把周末交给大同古建</h2>
+            <p>华夏旅行社｜北京赵公口集合出发｜成人价699元起</p>
+          </div>
+          <button class="button button-primary" data-open-modal>咨询报名</button>
+        </div>
+      </section>
+    </main>
+
+    <aside class="floating-card" data-floating>
+      <strong>大同二日游 ¥699起</strong>
+      <span>北京赵公口出发，2天1晚文化古建线路</span>
+      <button class="button button-dark" data-open-modal>咨询报名</button>
+    </aside>
+
+    <div class="mobile-bar">
+      <div class="mobile-price"><strong>¥699起</strong><span>大同二日游</span></div>
+      <button class="button button-dark" data-open-modal>咨询</button>
+    </div>
+
+    <div class="modal" data-modal aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-head">
+          <div>
+            <h3 id="modal-title">咨询报名</h3>
+            <p>留下信息后，旅行顾问可用于后续联系确认。</p>
+          </div>
+          <button class="close" data-close-modal aria-label="关闭">×</button>
+        </div>
+        <form class="form" data-form>
+          <div class="field"><label for="name">姓名</label><input id="name" name="name" placeholder="请输入姓名"></div>
+          <div class="field"><label for="phone">手机号</label><input id="phone" name="phone" placeholder="请输入手机号"></div>
+          <div class="field">
+            <label for="traveler">出行人群</label>
+            <select id="traveler" name="traveler">
+              <option>成人</option>
+              <option>学生</option>
+              <option>老人儿童</option>
+              <option>家庭/多人同行</option>
+            </select>
+          </div>
+          <div class="field"><label for="note">备注</label><textarea id="note" name="note" placeholder="例如：预计几人出行、希望哪天出发"></textarea></div>
+          <button class="button button-dark" type="submit">提交咨询</button>
+          <p class="form-note" data-form-note>当前为页面展示表单，提交后会在本页给出确认提示。</p>
+        </form>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>© 华夏旅行社 大同二日游产品首页</span>
+        <span>图片素材来自 Wikimedia Commons，可替换为旅行社实拍图。</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll(".hero-slide")];
+    const dots = [...document.querySelectorAll(".dot")];
+    const nav = document.querySelector("[data-nav]");
+    const floating = document.querySelector("[data-floating]");
+    const modal = document.querySelector("[data-modal]");
+    const form = document.querySelector("[data-form]");
+    const formNote = document.querySelector("[data-form-note]");
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      currentSlide = index;
+      slides.forEach((slide, i) => slide.classList.toggle("is-active", i === index));
+      dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", () => showSlide(Number(dot.dataset.slide)));
+    });
+
+    setInterval(() => {
+      showSlide((currentSlide + 1) % slides.length);
+    }, 5200);
+
+    function updateChrome() {
+      const scrolled = window.scrollY > 80;
+      nav.classList.toggle("is-solid", scrolled);
+      floating.classList.toggle("is-visible", window.scrollY > 560);
+    }
+
+    window.addEventListener("scroll", updateChrome, { passive: true });
+    updateChrome();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.16 });
+
+    document.querySelectorAll(".reveal").forEach((item) => observer.observe(item));
+
+    document.querySelectorAll(".day-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".day-tab").forEach((item) => item.classList.remove("is-active"));
+        document.querySelectorAll(".day").forEach((item) => item.classList.remove("is-active"));
+        tab.classList.add("is-active");
+        document.querySelector(`[data-day-panel="${tab.dataset.day}"]`).classList.add("is-active");
+      });
+    });
+
+    document.querySelectorAll(".more").forEach((button) => {
+      button.addEventListener("click", () => {
+        const row = button.closest(".schedule-row");
+        row.classList.toggle("is-open");
+        button.textContent = row.classList.contains("is-open") ? "−" : "+";
+      });
+    });
+
+    document.querySelectorAll(".price-item, .fare").forEach((item) => {
+      item.addEventListener("click", () => {
+        document.querySelectorAll(".price-item").forEach((price) => price.classList.remove("is-active"));
+        document.querySelectorAll(".fare").forEach((fare) => fare.classList.remove("is-selected"));
+        const key = item.dataset.price || item.dataset.fare;
+        if (item.classList.contains("price-item")) item.classList.add("is-active");
+        if (item.classList.contains("fare")) item.classList.add("is-selected");
+        if (key === "699" || key === "成人") {
+          document.querySelector('[data-fare="成人"]').classList.add("is-selected");
+          document.querySelector('[data-price="699"]').classList.add("is-active");
+        }
+        if (key === "650" || key === "学生") {
+          document.querySelector('[data-fare="学生"]').classList.add("is-selected");
+          document.querySelector('[data-price="650"]').classList.add("is-active");
+        }
+        if (key === "588" || key === "老人儿童") {
+          document.querySelector('[data-fare="老人儿童"]').classList.add("is-selected");
+          document.querySelector('[data-price="588"]').classList.add("is-active");
+        }
+      });
+    });
+
+    function openModal() {
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+      document.querySelector("#name").focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("modal-open");
+    }
+
+    document.querySelectorAll("[data-open-modal]").forEach((button) => button.addEventListener("click", openModal));
+    document.querySelector("[data-close-modal]").addEventListener("click", closeModal);
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      formNote.textContent = "已记录咨询意向。实际接入时可把这里连接到表单系统或客服工具。";
+      form.reset();
+    });
+  </script>
+</body>
+</html>
