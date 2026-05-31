@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>华夏旅行社｜大同二日游</title>
+  <style>
+    :root {
+      --ink: #1d2526;
+      --muted: #60706e;
+      --paper: #fffaf2;
+      --line: #e8ded0;
+      --terra: #b85432;
+      --terra-dark: #823a28;
+      --jade: #1f6f67;
+      --gold: #d99b35;
+      --mist: #f3efe6;
+      --white: #ffffff;
+      --shadow: 0 18px 50px rgba(55, 44, 32, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.6;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      overflow: hidden;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px clamp(20px, 5vw, 72px);
+      color: var(--white);
+      background: linear-gradient(to bottom, rgba(24, 30, 28, 0.72), rgba(24, 30, 28, 0));
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px);
+      font-size: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero {
+      min-height: 92vh;
+      position: relative;
+      color: var(--white);
+      display: grid;
+      align-items: end;
+      padding: 120px clamp(20px, 5vw, 72px) 54px;
+      background: #24302f;
+    }
+
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(16, 22, 21, 0.86) 0%, rgba(16, 22, 21, 0.58) 42%, rgba(16, 22, 21, 0.16) 100%),
+        linear-gradient(0deg, rgba(16, 22, 21, 0.78) 0%, rgba(16, 22, 21, 0.04) 48%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+      gap: clamp(28px, 5vw, 68px);
+      align-items: end;
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.44);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    h1 {
+      margin: 18px 0 18px;
+      max-width: 760px;
+      font-size: clamp(44px, 7vw, 86px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 660px;
+      margin: 0 0 28px;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: clamp(17px, 2vw, 21px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .button-primary {
+      background: var(--gold);
+      color: #2f2415;
+      box-shadow: 0 12px 32px rgba(217, 155, 53, 0.32);
+    }
+
+    .button-ghost {
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .price-panel {
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-label {
+      margin: 0 0 10px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 14px;
+    }
+
+    .price-main {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .price-main strong {
+      font-size: 48px;
+      line-height: 1;
+    }
+
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .price-item {
+      padding: 12px 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      text-align: center;
+    }
+
+    .price-item span {
+      display: block;
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 12px;
+    }
+
+    .price-item b {
+      font-size: 20px;
+    }
+
+    .quick-facts {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: min(1180px, calc(100% - 40px));
+      margin: -38px auto 0;
+      position: relative;
+      z-index: 2;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+    }
+
+    .fact {
+      padding: 22px 24px;
+      border-right: 1px solid var(--line);
+    }
+
+    .fact:last-child {
+      border-right: 0;
+    }
+
+    .fact span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .fact strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 18px;
+    }
+
+    section {
+      padding: 76px clamp(20px, 5vw, 72px);
+    }
+
+    .section-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 30px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.15;
+    }
+
+    .section-heading p {
+      max-width: 470px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .highlights {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+    }
+
+    .feature {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #d8d0c4;
+    }
+
+    .feature::after,
+    .spot::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(22, 27, 26, 0.76), rgba(22, 27, 26, 0.04) 62%);
+    }
+
+    .feature-text,
+    .spot-text {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 22px;
+      z-index: 1;
+      color: var(--white);
+    }
+
+    .feature-text h3,
+    .spot-text h3 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .feature-text p,
+    .spot-text p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.84);
+    }
+
+    .spots {
+      display: grid;
+      gap: 20px;
+    }
+
+    .spot {
+      position: relative;
+      min-height: 250px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #d8d0c4;
+    }
+
+    .itinerary-band {
+      background: var(--mist);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 18px;
+    }
+
+    .day {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr);
+      gap: 24px;
+      padding: 24px;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 30px rgba(55, 44, 32, 0.08);
+    }
+
+    .day-title {
+      padding-right: 22px;
+      border-right: 1px solid var(--line);
+    }
+
+    .day-title span {
+      color: var(--terra);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .day-title h3 {
+      margin: 8px 0 0;
+      font-size: 28px;
+      line-height: 1.18;
+    }
+
+    .schedule {
+      display: grid;
+      gap: 14px;
+    }
+
+    .schedule-row {
+      display: grid;
+      grid-template-columns: 104px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .time {
+      color: var(--jade);
+      font-weight: 800;
+    }
+
+    .schedule-row p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .schedule-row strong {
+      color: var(--ink);
+    }
+
+    .pricing {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .fare-card,
+    .notice {
+      padding: 28px;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 30px rgba(55, 44, 32, 0.08);
+    }
+
+    .fare-card h3,
+    .notice h3 {
+      margin: 0 0 18px;
+      font-size: 24px;
+    }
+
+    .fare-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .fare {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .fare:last-child {
+      border-bottom: 0;
+    }
+
+    .fare span {
+      color: var(--muted);
+    }
+
+    .fare strong {
+      color: var(--terra-dark);
+      font-size: 26px;
+    }
+
+    .notice ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .notice li + li {
+      margin-top: 10px;
+    }
+
+    .cta {
+      color: var(--white);
+      background: linear-gradient(135deg, var(--jade), #263f44 54%, var(--terra-dark));
+    }
+
+    .cta-box {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .cta h2 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.15;
+    }
+
+    .cta p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .footer {
+      padding: 26px clamp(20px, 5vw, 72px);
+      color: #74685d;
+      background: #f7f0e6;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 860px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 112px;
+      }
+
+      .hero-content,
+      .highlights,
+      .pricing,
+      .cta-box {
+        grid-template-columns: 1fr;
+      }
+
+      .price-panel {
+        max-width: 460px;
+      }
+
+      .quick-facts {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .fact {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .fact:nth-child(odd) {
+        border-right: 1px solid var(--line);
+      }
+
+      .fact:nth-last-child(-n + 2) {
+        border-bottom: 0;
+      }
+
+      .section-heading {
+        display: block;
+      }
+
+      .section-heading p {
+        margin-top: 12px;
+      }
+
+      .feature {
+        min-height: 390px;
+      }
+
+      .day {
+        grid-template-columns: 1fr;
+      }
+
+      .day-title {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 0 0 18px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .nav {
+        padding: 14px 18px;
+      }
+
+      .hero {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .price-grid,
+      .quick-facts {
+        grid-template-columns: 1fr;
+      }
+
+      .fact,
+      .fact:nth-child(odd) {
+        border-right: 0;
+      }
+
+      .fact:nth-last-child(2) {
+        border-bottom: 1px solid var(--line);
+      }
+
+      section {
+        padding: 58px 18px;
+      }
+
+      .schedule-row {
+        grid-template-columns: 84px minmax(0, 1fr);
+        gap: 12px;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="nav">
+      <a class="brand" href="#top" aria-label="华夏旅行社首页">
+        <span class="brand-mark">华</span>
+        <span>华夏旅行社</span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="#highlights">行程亮点</a>
+        <a href="#itinerary">每日安排</a>
+        <a href="#price">产品价格</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-media">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Datong_Ancient_City_Wall_04.jpg" alt="大同古城墙">
+        </div>
+        <div class="hero-content">
+          <div>
+            <span class="eyebrow">北京赵公口出发｜2天1晚｜文化古建线路</span>
+            <h1>大同二日游</h1>
+            <p class="hero-copy">一次走进云冈石窟、悬空寺与大同古城，把北魏佛影、悬崖古寺和古城夜色安排在一个轻松周末里。</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#price">查看价格</a>
+              <a class="button button-ghost" href="#itinerary">浏览行程</a>
+            </div>
+          </div>
+          <aside class="price-panel" aria-label="产品价格">
+            <p class="panel-label">成人起价</p>
+            <div class="price-main">
+              <strong>¥699</strong>
+              <span>/人</span>
+            </div>
+            <p class="panel-label">含团队用餐、三钻酒店住宿与两日行程安排，适合家庭、学生与周末短途出游。</p>
+            <div class="price-grid">
+              <div class="price-item"><span>学生</span><b>¥650</b></div>
+              <div class="price-item"><span>老人</span><b>¥588</b></div>
+              <div class="price-item"><span>儿童</span><b>¥588</b></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <div class="quick-facts" aria-label="行程概要">
+        <div class="fact"><span>出发时间</span><strong>第1天 07:00</strong></div>
+        <div class="fact"><span>集合地点</span><strong>北京赵公口</strong></div>
+        <div class="fact"><span>酒店标准</span><strong>携程三钻酒店</strong></div>
+        <div class="fact"><span>返程安排</span><strong>第2天 13:00</strong></div>
+      </div>
+
+      <section id="highlights">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2>一眼看懂这趟大同</h2>
+            <p>路线围绕大同经典文化地标展开，白天看石窟与悬空古寺，晚上把时间留给古城自由漫步和当地小吃。</p>
+          </div>
+          <div class="highlights">
+            <article class="feature">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Yungang_Grottoes_Cave_20_1.jpg/1280px-Yungang_Grottoes_Cave_20_1.jpg" alt="云冈石窟第20窟佛像">
+              <div class="feature-text">
+                <h3>云冈石窟</h3>
+                <p>中国石刻艺术代表之一，主要洞窟45个，造像数量众多，适合作为大同行程的第一站。</p>
+              </div>
+            </article>
+            <div class="spots">
+              <article class="spot">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Hanging_Monastery_entrance.jpg/1280px-Hanging_Monastery_entrance.jpg" alt="悬空寺外观">
+                <div class="spot-text">
+                  <h3>悬空寺</h3>
+                  <p>建在恒山金龙峡崖壁上的儒释道三教合一寺庙建筑群。</p>
+                </div>
+              </article>
+              <article class="spot">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Datong_Ancient_City_Wall_04.jpg/1280px-Datong_Ancient_City_Wall_04.jpg" alt="大同古城墙">
+                <div class="spot-text">
+                  <h3>大同古城</h3>
+                  <p>晚间自由活动，适合登城、拍照、逛街和品尝大同风味。</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="itinerary-band" id="itinerary">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2>两天安排</h2>
+            <p>把长途车程、用餐、游览和自由活动按时间展开，方便客人快速判断节奏。</p>
+          </div>
+          <div class="timeline">
+            <article class="day">
+              <div class="day-title">
+                <span>第1天</span>
+                <h3>北京出发<br>云冈石窟</h3>
+              </div>
+              <div class="schedule">
+                <div class="schedule-row">
+                  <div class="time">07:00</div>
+                  <p><strong>北京赵公口出发</strong>，乘车前往山西大同。</p>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">12:00</div>
+                  <p><strong>团餐午餐</strong>，预计12:00至13:30，用餐标准60元/人，品尝大同特色美食。</p>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">14:00</div>
+                  <p><strong>游览云冈石窟</strong>，门票120元/人，参观武州山南麓的世界级石窟艺术遗存。</p>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">晚上</div>
+                  <p><strong>大同古城自由活动</strong>，游览古城街区与城墙夜景，入住携程三钻酒店。</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="day">
+              <div class="day-title">
+                <span>第2天</span>
+                <h3>悬空寺<br>返程北京</h3>
+              </div>
+              <div class="schedule">
+                <div class="schedule-row">
+                  <div class="time">07:00</div>
+                  <p><strong>酒店早餐</strong>，早餐时间预计07:00至08:00。</p>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">08:00</div>
+                  <p><strong>出发游览悬空寺</strong>，门票15元/人，登临票100元/人，必消小交通20元/人。</p>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">11:30</div>
+                  <p><strong>午餐</strong>，浑源凉粉或大同刀削面，参考标准15元/人。</p>
+                </div>
+                <div class="schedule-row">
+                  <div class="time">13:00</div>
+                  <p><strong>返程北京赵公口</strong>，结束大同二日文化古建之旅。</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="price">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2>产品价格与费用提示</h2>
+            <p>价格信息突出展示，门票与餐标单独说明，方便报名咨询时快速核对。</p>
+          </div>
+          <div class="pricing">
+            <article class="fare-card">
+              <h3>报名价格</h3>
+              <div class="fare-list">
+                <div class="fare"><span>成人价</span><strong>¥699/人</strong></div>
+                <div class="fare"><span>学生价</span><strong>¥650/人</strong></div>
+                <div class="fare"><span>老人儿童</span><strong>¥588/人</strong></div>
+              </div>
+            </article>
+            <article class="notice">
+              <h3>行程内参考费用</h3>
+              <ul>
+                <li>云冈石窟门票：120元/人。</li>
+                <li>悬空寺门票：15元/人；登临票：100元/人；必消小交通：20元/人。</li>
+                <li>第1天团餐餐标：60元/人；第2天午餐参考：15元/人。</li>
+                <li>住宿标准：携程三钻酒店，具体酒店以实际确认安排为准。</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="section-inner cta-box">
+          <div>
+            <h2>把周末交给大同古建</h2>
+            <p>华夏旅行社｜北京赵公口集合出发｜成人价699元起</p>
+          </div>
+          <a class="button button-primary" href="#top">返回顶部</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>© 华夏旅行社 大同二日游产品首页</span>
+        <span>图片素材来自 Wikimedia Commons，可替换为旅行社实拍图。</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
